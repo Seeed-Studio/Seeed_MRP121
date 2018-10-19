@@ -89,10 +89,42 @@ discharge time CDT, as well as a common filtering setting (FFI, SFI, ESI) for al
 /*Default is 0 to stop mode*/
 #define ELEC_CFG_REG_ADDR                    0X5E
 
-using u8 = unsigned char;
-using u16 = unsigned short;
-using u32 =long unsigned int;
-using s32 = int;
+
+#ifndef SEEED_DN_DEFINES
+#define SEEED_DN_DEFINES
+
+#ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
+  #define SERIAL_DB SerialUSB
+#else
+  #define SERIAL_DB Serial
+#endif
+
+
+typedef int            s32;
+typedef long unsigned int   u32;
+typedef short          s16;
+typedef unsigned short u16;
+typedef char           s8;
+typedef unsigned char  u8;
+
+typedef enum	
+{
+    NO_ERROR=0,
+    ERROR_PARAM=-1,
+    ERROR_COMM =-2,
+    ERROR_OTHERS=-128,
+}err_t;
+
+
+#define CHECK_RESULT(a,b)   do{if(a=b)  {    \
+                            SERIAL_DB.print(__FILE__);    \
+                            SERIAL_DB.print(__LINE__);   \
+                            SERIAL_DB.print(" error code =");  \
+                            SERIAL_DB.println(a);                   \
+                            return a;   \
+                            }}while(0)
+
+#endif
 
 typedef enum
 {
