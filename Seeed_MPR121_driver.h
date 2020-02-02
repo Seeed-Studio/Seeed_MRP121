@@ -1,33 +1,33 @@
 /*
- * Seeed_MPR121_driver.h
- * Driver for DIGITAL I2C HUMIDITY AND TEMPERATURE SENSOR
- *  
- * Copyright (c) 2018 Seeed Technology Co., Ltd.
- * Website    : www.seeed.cc
- * Author     : downey
- * Create Time: May 2018
- * Change Log :
- *
- * The MIT License (MIT)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+    Seeed_MPR121_driver.h
+    Driver for DIGITAL I2C HUMIDITY AND TEMPERATURE SENSOR
+
+    Copyright (c) 2018 Seeed Technology Co., Ltd.
+    Website    : www.seeed.cc
+    Author     : downey
+    Create Time: May 2018
+    Change Log :
+
+    The MIT License (MIT)
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
 #ifndef SEEED_MPR121_DRIVER_H
 #define SEEED_MPR121_DRIVER_H
 
@@ -37,7 +37,7 @@
 
 #define DEFUALT_MPR121_ADDR   0X5B
 
-#define TOUCH_THRESHOLD_MAX   0XF0       
+#define TOUCH_THRESHOLD_MAX   0XF0
 
 /****************************************************Sensor register address!!***********************************************/
 /****************************************************************************************************************************/
@@ -62,20 +62,20 @@
 
 /*All12 of the electrode baseline values are controlled by the same set of filtering control registers, 0x2B ~ 0x35*/
 /*The 13th channel ELEPROX is controlled by registers 0x36 ~ 0x40*/
-#define BASELINE_FILTERING_CONTROL_REG_START_ADDR    0X2B  
+#define BASELINE_FILTERING_CONTROL_REG_START_ADDR    0X2B
 
 
-/*Each of the 12 channels can be set with its own set of touch and release thresholds. Touch and release are detected by
-comparing the electrode filtered data to the baseline value. typically in the range 0x04~0x10*/
-/*Touch condition: Baseline - Electrode filtered data > Touch threshold
-  Release condition: Baseline - Electrode filtered data < Release threshold*/
+/*  Each of the 12 channels can be set with its own set of touch and release thresholds. Touch and release are detected by
+    comparing the electrode filtered data to the baseline value. typically in the range 0x04~0x10*/
+/*  Touch condition: Baseline - Electrode filtered data > Touch threshold
+    Release condition: Baseline - Electrode filtered data < Release threshold*/
 #define THRESHOLD_REG_START_ADDR            0X41
 
 /*All 12 channels use the same set of touch and release debounce numbers.*/
 #define DEBOUNCE_REG_ADDR                   0X5B
 
-/*These two registers set the global AFE settings. This includes global electrode charge/discharge current CDC, global charge/
-discharge time CDT, as well as a common filtering setting (FFI, SFI, ESI) for all 12 channels, including the 13th Eleprox channel*/
+/*  These two registers set the global AFE settings. This includes global electrode charge/discharge current CDC, global charge/
+    discharge time CDT, as well as a common filtering setting (FFI, SFI, ESI) for all 12 channels, including the 13th Eleprox channel*/
 #define FILTER_AND_GLOBAL_CDC_CFG_ADDR      0X5C
 #define FILTER_AND_GLOBAL_CDT_CFG_ADDR      0X5D
 
@@ -94,9 +94,9 @@ discharge time CDT, as well as a common filtering setting (FFI, SFI, ESI) for al
 #define SEEED_DN_DEFINES
 
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
-  #define SERIAL_DB SerialUSB
+    #define SERIAL_DB SerialUSB
 #else
-  #define SERIAL_DB Serial
+    #define SERIAL_DB Serial
 #endif
 
 
@@ -107,60 +107,57 @@ typedef unsigned short u16;
 typedef char           s8;
 typedef unsigned char  u8;
 
-typedef enum	
-{
-    NO_ERROR=0,
-    ERROR_PARAM=-1,
-    ERROR_COMM =-2,
-    ERROR_OTHERS=-128,
-}err_t;
+typedef enum {
+    NO_ERROR = 0,
+    ERROR_PARAM = -1,
+    ERROR_COMM = -2,
+    ERROR_OTHERS = -128,
+} err_t;
 
 
 #define CHECK_RESULT(a,b)   do{if(a=b)  {    \
-                            SERIAL_DB.print(__FILE__);    \
-                            SERIAL_DB.print(__LINE__);   \
-                            SERIAL_DB.print(" error code =");  \
-                            SERIAL_DB.println(a);                   \
-                            return a;   \
-                            }}while(0)
+            SERIAL_DB.print(__FILE__);    \
+            SERIAL_DB.print(__LINE__);   \
+            SERIAL_DB.print(" error code =");  \
+            SERIAL_DB.println(a);                   \
+            return a;   \
+        }}while(0)
 
 #endif
 
-typedef enum
-{
+typedef enum {
     STOP_MODE,
     START_PROXIMITY_ENABLE_MODE,
     START_PROXIMITY_DISABLE_MODE,
-}sensor_mode_t;
+} sensor_mode_t;
 
 
 
 
-class Mpr121
-{
-    public:
-        Mpr121(u8 addr=DEFUALT_MPR121_ADDR);
-        ~Mpr121(){}
-        s32 begin();
-        u16 check_status_register();
-        s32 select_mode(sensor_mode_t mode);
-        void set_debounce(u8 debounce);
-        void set_threshold(u16 threshold);
-        void set_globle_param(u16 value);
-        void get_filtered_reg_data(u16 *elecs_stat,u16* elecs_filtered_data);
-        void get_fruits_data(u16 *elecs_stat,u16* elecs_filtered_data);
-        void get_baseline_data(u16 elecs_stat,u8* base_line_data);
-        void set_sensitivity(u8 senvalue);
-        u8 touch_threshold_max;
-    private:        
-        u8 _IIC_ADDR;
-        void IIC_read_bytes(u8 reg,u8* bytes,u32 bytes_len);
-        void IIC_read_byte(u8 reg,u8* byte);
-        s32 IIC_write_byte(u8 reg,u8 byte);
-        void IIC_write_bytes(u8 reg,u8 bytes[],u32 bytes_len);
-        s32 sensor_stop();
-        s32 sensor_start_proximity_enable();
-        s32 sensor_start_proximity_disable();
+class Mpr121 {
+  public:
+    Mpr121(u8 addr = DEFUALT_MPR121_ADDR);
+    ~Mpr121() {}
+    s32 begin();
+    u16 check_status_register();
+    s32 select_mode(sensor_mode_t mode);
+    void set_debounce(u8 debounce);
+    void set_threshold(u16 threshold);
+    void set_globle_param(u16 value);
+    void get_filtered_reg_data(u16* elecs_stat, u16* elecs_filtered_data);
+    void get_fruits_data(u16* elecs_stat, u16* elecs_filtered_data);
+    void get_baseline_data(u16 elecs_stat, u8* base_line_data);
+    void set_sensitivity(u8 senvalue);
+    u8 touch_threshold_max;
+  private:
+    u8 _IIC_ADDR;
+    void IIC_read_bytes(u8 reg, u8* bytes, u32 bytes_len);
+    void IIC_read_byte(u8 reg, u8* byte);
+    s32 IIC_write_byte(u8 reg, u8 byte);
+    void IIC_write_bytes(u8 reg, u8 bytes[], u32 bytes_len);
+    s32 sensor_stop();
+    s32 sensor_start_proximity_enable();
+    s32 sensor_start_proximity_disable();
 };
 
 
