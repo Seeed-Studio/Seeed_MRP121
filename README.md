@@ -1,4 +1,4 @@
-Grove touch sensor MPR121
+Grove touch sensor MPR121  [![Build Status](https://travis-ci.com/Seeed-Studio/Seeed_MRP121.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Seeed_MRP121)
 =================================  
  
 
