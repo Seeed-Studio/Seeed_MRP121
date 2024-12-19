@@ -71,7 +71,9 @@ s32 Mpr121::select_mode(sensor_mode_t mode) {
         case START_PROXIMITY_DISABLE_MODE:
             return sensor_start_proximity_disable();
             break;
-        default: break;
+        default: 
+            return -1;
+            break;
     }
 }
 
@@ -173,7 +175,7 @@ void Mpr121::get_filtered_reg_data(u16* elecs_stat, u16* elecs_filtered_data) {
 
 //use frutits as example
 void Mpr121::get_fruits_data(u16* elecs_stat, u16* elecs_filtered_data) {
-    u16 value = 0;
+
     u8 data_l, data_h;
     for (int i = 0; i < CHANNEL_NUM; i++) {
         if ((*elecs_stat) & (1 << i)) {
@@ -190,7 +192,7 @@ void Mpr121::get_fruits_data(u16* elecs_stat, u16* elecs_filtered_data) {
 }
 
 void Mpr121::get_baseline_data(u16 elecs_stat, u8* base_line_data) {
-    u16 value = 0;
+
     u8 data = 0;
     for (int i = 0; i < CHANNEL_NUM; i++) {
         if (elecs_stat & (1 << i)) {
@@ -207,6 +209,7 @@ void Mpr121::get_baseline_data(u16 elecs_stat, u8* base_line_data) {
  * */
 s32 Mpr121::sensor_stop() {
     return IIC_write_byte(ELEC_CFG_REG_ADDR, 0);
+    return 0;
 }
 
 /** @brief Set start mode with proximity enable by set ELEC_CFG_REG_ADDR to 0x0
@@ -214,6 +217,7 @@ s32 Mpr121::sensor_stop() {
  * */
 s32 Mpr121::sensor_start_proximity_enable() {
     IIC_write_byte(ELEC_CFG_REG_ADDR, 0x3c);
+    return 0;
 }
 
 /** @brief Set start mode with proximity disable by set ELEC_CFG_REG_ADDR to 0x0
@@ -221,6 +225,7 @@ s32 Mpr121::sensor_start_proximity_enable() {
  * */
 s32 Mpr121::sensor_start_proximity_disable() {
     IIC_write_byte(ELEC_CFG_REG_ADDR, 0x3c);
+    return 0;   
 }
 
 

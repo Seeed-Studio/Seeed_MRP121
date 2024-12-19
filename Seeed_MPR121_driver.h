@@ -112,7 +112,7 @@ typedef enum {
     ERROR_PARAM = -1,
     ERROR_COMM = -2,
     ERROR_OTHERS = -128,
-} err_t;
+} mpr_err_t;
 
 
 #define CHECK_RESULT(a,b)   do{if(a=b)  {    \
